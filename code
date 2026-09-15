@@ -1,0 +1,451 @@
+
+<style>
+  :root { color-scheme: light dark; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .wrap { padding: 2rem; max-width: 900px; margin: 0 auto; }
+  .wrap-wide { max-width: 1200px; }
+  .banner { margin-bottom: 1.5rem; padding: 0.75rem 1rem; background: var(--bg-accent); color: var(--text-accent); border-radius: 8px; font-size: 13px; }
+  .home-title { text-align: center; margin-bottom: 3rem; }
+  .home-title h1 { font-size: 32px; font-weight: 500; margin: 0 0 0.5rem; color: var(--text-primary); }
+  .home-title p { color: var(--text-secondary); font-size: 16px; margin: 0; }
+  .home-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .home-card { padding: 2rem; border: 2px solid var(--border-accent); border-radius: 12px; background: var(--surface-2); cursor: pointer; text-align: center; }
+  .home-card .emoji { font-size: 40px; margin-bottom: 1rem; }
+  .home-card h2 { font-size: 18px; font-weight: 500; margin: 0 0 0.5rem; color: var(--text-primary); }
+  .home-card p { color: var(--text-secondary); font-size: 14px; margin: 0; }
+  .back-link { background: transparent; border: none; color: var(--text-accent); cursor: pointer; margin-bottom: 1rem; font-size: 14px; padding: 0; }
+  h1.page-title { font-size: 28px; font-weight: 500; margin: 0 0 1.5rem; color: var(--text-primary); }
+  .title-row { display: flex; align-items: center; gap: 12px; margin-bottom: 1rem; }
+  .title-row h1 { margin: 0; }
+  .error-banner, .warning-banner { padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; font-size: 14px; display: flex; gap: 10px; align-items: flex-start; }
+  .error-banner { background: var(--bg-danger); color: var(--text-danger); }
+  .warning-banner { background: var(--bg-warning); color: var(--text-warning); }
+  .pipeline-status { font-size: 13px; color: var(--text-secondary); margin-bottom: 0.5rem; }
+  .pipeline-status b { color: var(--text-secondary); }
+  .dropzone-label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-primary); }
+  .dropzone { border: 2px dashed var(--border); border-radius: 12px; padding: 2rem; text-align: center; cursor: pointer; background: var(--surface-1); margin-bottom: 2rem; }
+  .dropzone.success { background: var(--bg-success); }
+  .dropzone.failed { background: var(--bg-danger); }
+  .dropzone .icon { font-size: 24px; margin-bottom: 0.5rem; }
+  .dropzone .fname { font-weight: 500; margin: 0 0 0.5rem; color: var(--text-success); }
+  .dropzone .fname.failed { color: var(--text-danger); }
+  .dropzone .fsize, .dropzone .hint { font-size: 12px; color: var(--text-secondary); margin: 0; }
+  .btn-primary { background: var(--fill-accent); color: white; border: none; padding: 0.75rem 2rem; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: 500; }
+  .btn-primary:disabled { background: var(--fill-disabled); cursor: default; }
+  .badge { padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 13px; font-weight: 500; display: inline-block; margin: 0 8px 8px 0; }
+  .badge-success { background: var(--bg-success); color: var(--text-success); }
+  .badge-danger { background: var(--bg-danger); color: var(--text-danger); }
+  .badge-warning { background: var(--bg-warning); color: var(--text-warning); }
+  .badge-accent { background: var(--bg-accent); color: var(--text-accent); }
+  .type-badge { font-size: 12px; font-weight: 500; padding: 0.25rem 0.6rem; border-radius: 999px; }
+  .type-ai { background: var(--bg-accent); color: var(--text-accent); }
+  .type-rule { background: var(--bg-warning); color: var(--text-warning); }
+  .section { background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+  .section h2 { font-size: 16px; font-weight: 500; margin: 0 0 1rem; color: var(--text-primary); }
+  .score-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 2rem; }
+  .score-card { background: var(--surface-1); padding: 1rem; border-radius: 10px; text-align: center; border: 0.5px solid var(--border); }
+  .score-card .label { font-size: 13px; color: var(--text-secondary); margin: 0 0 0.5rem; }
+  .score-card .value { font-size: 24px; font-weight: 500; margin: 0; }
+  .skill-group h3 { font-size: 14px; font-weight: 500; margin: 0 0 0.5rem; }
+  .skill-group { margin-bottom: 1.5rem; }
+  .learning-item, .course-card { padding: 12px; background: var(--surface-1); border-radius: 8px; margin-bottom: 12px; }
+  .learning-item { border-left: 3px solid var(--border-accent); }
+  .course-card { border-left: 3px solid var(--border-accent); padding: 1rem; }
+  .learning-item .top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+  .learning-item .skill { font-weight: 500; font-size: 14px; color: var(--text-primary); }
+  .learning-item .reason, .course-card p { font-size: 13px; color: var(--text-secondary); margin: 0; }
+  .course-card h3 { font-size: 13px; font-weight: 500; margin: 0 0 0.25rem; color: var(--text-primary); }
+  .resume-row { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0.75rem; background: var(--surface-1); border-radius: 6px; margin-bottom: 8px; font-size: 13px; color: var(--text-primary); }
+  .resume-row button { background: var(--bg-danger); color: var(--text-danger); border: none; padding: 0.3rem 0.6rem; border-radius: 4px; cursor: pointer; font-size: 12px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { padding: 0.75rem; }
+  th { text-align: center; font-weight: 500; color: var(--text-primary); border-bottom: 0.5px solid var(--border); }
+  th:nth-child(1), th:nth-child(2), td:nth-child(1), td:nth-child(2) { text-align: left; }
+  td { text-align: center; color: var(--text-primary); border-bottom: 0.5px solid var(--border); }
+  ul.suggestions { padding-left: 1.5rem; margin: 0; }
+  ul.suggestions li { margin-bottom: 0.75rem; font-size: 14px; color: var(--text-secondary); }
+  input[type=file] { display: none; }
+</style>
+ 
+<div id="app"></div>
+ 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.2/mammoth.browser.min.js"></script>
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+ 
+// ---------------------------------------------------------------------------
+// Real text extraction: PDF via pdf.js, DOCX via mammoth, TXT via FileReader.
+// This mirrors backend/analyzer nothing — it mirrors frontend/src/utils/extractText.js
+// from the delivered project (same approach, browser-CDN build instead of npm import).
+// ---------------------------------------------------------------------------
+function readAsArrayBuffer(file) {
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = (e) => resolve(e.target.result);
+    r.onerror = () => reject(r.error);
+    r.readAsArrayBuffer(file);
+  });
+}
+function readAsText(file) {
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = (e) => resolve(e.target.result);
+    r.onerror = () => reject(r.error);
+    r.readAsText(file);
+  });
+}
+async function extractFromPdf(file) {
+  const buffer = await readAsArrayBuffer(file);
+  const pdf = await pdfjsLib.getDocument({ data: buffer }).promise;
+  const pages = [];
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const content = await page.getTextContent();
+    pages.push(content.items.map((it) => it.str).join(" "));
+  }
+  return pages.join("\n\n");
+}
+async function extractFromDocx(file) {
+  const buffer = await readAsArrayBuffer(file);
+  const result = await mammoth.extractRawText({ arrayBuffer: buffer });
+  return result.value;
+}
+const EXTRACTION_ERROR = "Could not extract text from this file. Please upload a valid PDF, DOCX, or TXT file.";
+async function extractTextFromFile(file) {
+  const ext = (file.name.split(".").pop() || "").toLowerCase();
+  try {
+    let text;
+    if (ext === "pdf") text = await extractFromPdf(file);
+    else if (ext === "docx") text = await extractFromDocx(file);
+    else if (ext === "txt") text = await readAsText(file);
+    else throw new Error("unsupported type");
+    if (!text || !text.trim()) throw new Error("empty");
+    return text.trim();
+  } catch (err) {
+    console.error("extraction failed:", err);
+    throw new Error(EXTRACTION_ERROR);
+  }
+}
+ 
+// ---------------------------------------------------------------------------
+// Rule-based analysis — same algorithm and skill vocabulary as
+// backend/analyzer/fallback_analyzer.py + skills_data.py in the delivered
+// project. This is real fallback scoring, not placeholder data. It's labeled
+// "Rule-Based Analysis" throughout because, same as the real app, the
+// AI (Anthropic) path isn't reachable from this sandboxed artifact.
+// ---------------------------------------------------------------------------
+const SKILLS = [
+  "python","javascript","typescript","java","c++","c#","go","golang","rust","ruby","php","swift","kotlin","scala","r","matlab","sql","html","css","bash","perl","dart",
+  "react","react.js","vue","vue.js","angular","next.js","nuxt.js","svelte","redux","tailwind","tailwind css","bootstrap","sass","webpack","vite","jquery","graphql","material ui","responsive design",
+  "django","django rest framework","flask","fastapi","node.js","express","express.js","spring","spring boot","asp.net",".net","laravel","rails","ruby on rails","nestjs",
+  "machine learning","deep learning","artificial intelligence","nlp","natural language processing","computer vision","data science","predictive modeling","tensorflow","pytorch","keras","scikit-learn","pandas","numpy","data analysis","data visualization","tableau","power bi","statistics","a/b testing","llm","large language models","generative ai","reinforcement learning","mlops","feature engineering",
+  "aws","azure","gcp","google cloud","docker","kubernetes","terraform","ansible","jenkins","ci/cd","devops","linux","nginx","microservices","serverless","cloudformation","helm","prometheus","grafana",
+  "postgresql","mysql","mongodb","redis","elasticsearch","sqlite","dynamodb","cassandra","oracle","firebase","supabase",
+  "git","github","gitlab","jira","agile","scrum","kanban","rest api","restful api","api design","unit testing","test driven development","tdd","system design","object oriented programming","oop","design patterns","message queues","kafka","rabbitmq","grpc","websockets",
+  "android","ios","react native","flutter","xamarin",
+  "communication","leadership","teamwork","problem solving","project management","stakeholder management","mentoring","cross-functional collaboration","time management","critical thinking","presentation skills","analytical skills",
+  "cybersecurity","penetration testing","owasp","oauth","jwt","encryption","network security",
+];
+function escapeRegExp(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
+function extractSkills(text) {
+  const lowered = (text || "").toLowerCase();
+  return SKILLS.filter((s) => new RegExp(`(?<![a-z0-9])${escapeRegExp(s)}(?![a-z0-9])`).test(lowered));
+}
+function courseFor(skill) {
+  return {
+    missing_skill: skill,
+    course_name: skill.replace(/\b\w/g, (c) => c.toUpperCase()) + " Fundamentals",
+    platform: "Coursera / Udemy",
+    difficulty: "Beginner",
+    why_recommended: `'${skill}' is required by the job description but wasn't found in the resume.`,
+    estimated_duration: "3-6 weeks",
+  };
+}
+function analyzeSingleRuleBased(jdText, resumeText) {
+  const jdSkills = extractSkills(jdText);
+  const resumeSkills = new Set(extractSkills(resumeText));
+  const matched = jdSkills.filter((s) => resumeSkills.has(s));
+  const missing = jdSkills.filter((s) => !resumeSkills.has(s));
+  const pct = jdSkills.length ? Math.round((matched.length / jdSkills.length) * 100) : 0;
+  return {
+    analysis_type: "rule_based",
+    ai_unavailable_reason: "AI analysis is temporarily unavailable because the AI API usage limit has been reached (or, in this chat sandbox, because the artifact can't reach an AI backend at all). Your files were uploaded and read successfully. Showing rule-based analysis instead.",
+    result: {
+      ats_score: pct, overall_match_percentage: pct, skill_match_percentage: pct,
+      matched_skills: matched, partially_matched_skills: [], missing_skills: missing, required_skills: jdSkills,
+      experience_match: { score: null, summary: "Rule-based analysis only checks skill keywords and can't assess years of experience." },
+      education_match: { score: null, summary: "Not evaluated in rule-based mode." },
+      skills_to_learn: missing.slice(0, 6).map((s, i) => ({ skill: s, priority: i < 3 ? "High" : "Medium", reason: "Listed as a requirement in the job description but not detected in the resume." })),
+      improvement_suggestions: missing.length ? [`Add concrete, quantifiable experience with: ${missing.slice(0, 5).join(", ")}.`] : ["No obvious keyword gaps found against the job description."],
+      course_recommendations: missing.slice(0, 5).map(courseFor),
+    },
+  };
+}
+function analyzeBatchRuleBased(jdText, resumes) {
+  const jdSkills = extractSkills(jdText);
+  const results = resumes.map((r) => {
+    const resumeSkills = new Set(extractSkills(r.text));
+    const matched = jdSkills.filter((s) => resumeSkills.has(s));
+    const missing = jdSkills.filter((s) => !resumeSkills.has(s));
+    const pct = jdSkills.length ? Math.round((matched.length / jdSkills.length) * 100) : 0;
+    return {
+      candidate_name: r.name, ats_score: pct, overall_match_percentage: pct, skill_match_percentage: pct,
+      matched_skills: matched, missing_skills: missing,
+      course_recommendations: missing.slice(0, 3).map(courseFor),
+    };
+  });
+  results.sort((a, b) => b.ats_score - a.ats_score);
+  results.forEach((r, i) => (r.rank = i + 1));
+  return { analysis_type: "rule_based", ai_unavailable_reason: "AI analysis unavailable in this sandbox — showing rule-based analysis.", results };
+}
+ 
+// ---------------------------------------------------------------------------
+// Tiny UI state machine
+// ---------------------------------------------------------------------------
+const STATUS = { EXTRACTING: "extracting", EXTRACTED: "extracted", FAILED: "failed" };
+const state = {
+  screen: "home", error: "",
+  singleJD: null, singleResume: null, singleResults: null,
+  multiJD: null, multiResumes: [], multiResults: null,
+};
+const app = document.getElementById("app");
+ 
+function render() {
+  if (state.screen === "home") return renderHome();
+  if (state.screen === "single") return renderSingleUpload();
+  if (state.screen === "single-results") return renderSingleResults();
+  if (state.screen === "multi") return renderMultiUpload();
+  if (state.screen === "multi-results") return renderMultiResults();
+}
+ 
+function el(html) { const d = document.createElement("div"); d.innerHTML = html; return d.firstElementChild; }
+ 
+function fileStatusChip(entry) {
+  if (!entry) return { text: "Not uploaded", cls: "" };
+  if (entry.status === STATUS.EXTRACTING) return { text: "Extracting…", cls: "" };
+  if (entry.status === STATUS.EXTRACTED) return { text: "✓ Successful", cls: "" };
+  return { text: `✗ ${entry.error}`, cls: "" };
+}
+ 
+function pipelineStatusHtml(label, entry) {
+  if (!entry) return "";
+  const ex = fileStatusChip(entry);
+  return `<div class="pipeline-status"><b>${label}:</b> File Upload: <span style="color:var(--text-success)">✓ Successful</span> · Text Extraction: <span style="color:${entry.status === STATUS.FAILED ? "var(--text-danger)" : entry.status === STATUS.EXTRACTED ? "var(--text-success)" : "var(--text-secondary)"}">${ex.text}</span></div>`;
+}
+ 
+function dropzoneHtml(id, label, icon, entry) {
+  const cls = entry?.status === STATUS.EXTRACTED ? "success" : entry?.status === STATUS.FAILED ? "failed" : "";
+  const body = entry
+    ? `<p class="fname ${entry.status === STATUS.FAILED ? "failed" : ""}">${entry.status === STATUS.EXTRACTING ? "⏳" : entry.status === STATUS.FAILED ? "✗" : "✓"} ${entry.file.name}</p>
+       <p class="fsize">${(entry.file.size / 1024).toFixed(1)} KB</p>`
+    : `<p class="fname" style="color:var(--text-primary)">Click to upload or drag and drop</p><p class="hint">PDF, DOCX, or TXT</p>`;
+  return `
+    <label class="dropzone-label">${label}</label>
+    <div class="dropzone ${cls}">
+      <input type="file" accept=".pdf,.docx,.txt" id="${id}" ${id === "multi-resumes-input" ? "multiple" : ""} />
+      <label for="${id}" style="cursor:pointer; display:block;">
+        <div class="icon">${icon}</div>
+        ${body}
+      </label>
+    </div>`;
+}
+ 
+function errorBannerHtml(msg, tone) {
+  if (!msg) return "";
+  return `<div class="${tone === "warning" ? "warning-banner" : "error-banner"}"><span>⚠</span><span>${msg}</span></div>`;
+}
+ 
+function skillGroupHtml(title, skills, colorClass) {
+  if (!skills || skills.length === 0) return "";
+  return `<div class="skill-group"><h3 style="color:var(--text-${colorClass === "badge-accent" ? "accent" : colorClass.replace("badge-", "")})">${title}</h3>
+    <div>${skills.map((s) => `<span class="badge ${colorClass}">${s}</span>`).join("")}</div></div>`;
+}
+ 
+function renderHome() {
+  app.innerHTML = `
+    <div class="wrap">
+      <div class="banner">🧪 Live in-chat demo. Extraction (PDF/DOCX/TXT) is real. Scoring uses the same rule-based fallback engine as the real app (AI analysis isn't reachable from this sandbox).</div>
+      <div class="home-title"><h1>📄 Resume Matcher Bot</h1><p>Upload files to analyze and compare resumes with job descriptions</p></div>
+      <div class="home-grid">
+        <button class="home-card" id="go-single"><div class="emoji">📤</div><h2>Analyze One Resume</h2><p>Upload 1 JD + 1 Resume</p></button>
+        <button class="home-card" id="go-multi"><div class="emoji">👥</div><h2>Compare Resumes</h2><p>Upload 1 JD + Multiple Resumes</p></button>
+      </div>
+    </div>`;
+  document.getElementById("go-single").onclick = () => { state.screen = "single"; render(); };
+  document.getElementById("go-multi").onclick = () => { state.screen = "multi"; render(); };
+}
+ 
+async function handleFileInput(inputEl, onEntry) {
+  const file = inputEl.files[0];
+  if (!file) return;
+  state.error = "";
+  onEntry({ file, status: STATUS.EXTRACTING, text: "", error: "" });
+  render();
+  try {
+    const text = await extractTextFromFile(file);
+    onEntry({ file, status: STATUS.EXTRACTED, text, error: "" });
+  } catch (err) {
+    onEntry({ file, status: STATUS.FAILED, text: "", error: err.message });
+    state.error = err.message;
+  }
+  render();
+}
+ 
+function renderSingleUpload() {
+  const canAnalyze = state.singleJD?.status === STATUS.EXTRACTED && state.singleResume?.status === STATUS.EXTRACTED;
+  app.innerHTML = `
+    <div class="wrap">
+      <button class="back-link" id="back">← Back to Home</button>
+      <h1 class="page-title">📤 Upload Files for Analysis</h1>
+      ${errorBannerHtml(state.error)}
+      ${pipelineStatusHtml("Job Description", state.singleJD)}
+      ${pipelineStatusHtml("Resume", state.singleResume)}
+      ${dropzoneHtml("single-jd-input", "Job Description File (PDF, DOCX, TXT)", "📋", state.singleJD)}
+      ${dropzoneHtml("single-resume-input", "Resume File (PDF, DOCX, TXT)", "📄", state.singleResume)}
+      <button class="btn-primary" id="analyze" ${canAnalyze ? "" : "disabled"}>Analyze Resume</button>
+    </div>`;
+  document.getElementById("back").onclick = () => { state.screen = "home"; state.singleJD = null; state.singleResume = null; state.error = ""; render(); };
+  document.getElementById("single-jd-input").onchange = (e) => handleFileInput(e.target, (entry) => (state.singleJD = entry));
+  document.getElementById("single-resume-input").onchange = (e) => handleFileInput(e.target, (entry) => (state.singleResume = entry));
+  document.getElementById("analyze").onclick = async () => {
+    if (!canAnalyze) return;
+    document.getElementById("analyze").textContent = "Analyzing...";
+    document.getElementById("analyze").disabled = true;
+    await new Promise((r) => setTimeout(r, 400));
+    state.singleResults = analyzeSingleRuleBased(state.singleJD.text, state.singleResume.text);
+    state.screen = "single-results";
+    render();
+  };
+}
+ 
+function renderSingleResults() {
+  const { analysis_type, ai_unavailable_reason, result } = state.singleResults;
+  app.innerHTML = `
+    <div class="wrap">
+      <button class="back-link" id="back">← Back to Upload</button>
+      <div class="title-row"><h1>✅ Resume Analysis Results</h1><span class="type-badge ${analysis_type === "ai" ? "type-ai" : "type-rule"}">${analysis_type === "ai" ? "AI Analysis" : "Rule-Based Analysis"}</span></div>
+      ${errorBannerHtml(ai_unavailable_reason, "warning")}
+      <div class="score-grid">
+        ${["ATS Score", result.ats_score].join("||")}
+      </div>
+      <div class="section"><h2>🎯 Skills Analysis</h2>
+        ${skillGroupHtml(`✓ Matched Skills (${result.matched_skills.length})`, result.matched_skills, "badge-success")}
+        ${skillGroupHtml(`✗ Missing Skills (${result.missing_skills.length})`, result.missing_skills, "badge-danger")}
+      </div>
+      ${result.skills_to_learn.length ? `<div class="section"><h2>🎓 Learning Roadmap</h2>${result.skills_to_learn.map((it) => `
+        <div class="learning-item"><div class="top"><span class="skill">${it.skill}</span><span style="font-size:12px;font-weight:500;color:var(--text-${it.priority === "High" ? "danger" : it.priority === "Medium" ? "warning" : "accent"})">${it.priority}</span></div><p class="reason">${it.reason}</p></div>`).join("")}</div>` : ""}
+      ${result.course_recommendations.length ? `<div class="section"><h2>📚 Recommended Courses</h2>${result.course_recommendations.map((c) => `
+        <div class="course-card"><h3>${c.course_name}</h3><p>For: <strong>${c.missing_skill}</strong> · ${c.platform} · ${c.difficulty}</p><p style="margin-top:0.5rem">${c.why_recommended}</p></div>`).join("")}</div>` : ""}
+      <div class="section"><h2>✏️ Resume Improvement Suggestions</h2><ul class="suggestions">${result.improvement_suggestions.map((s) => `<li>${s}</li>`).join("")}</ul></div>
+    </div>`;
+ 
+  // score cards built separately (need proper DOM, not string join hack above)
+  const grid = app.querySelector(".score-grid");
+  const cards = [
+    ["ATS Score", result.ats_score], ["Overall Match", result.overall_match_percentage], ["Skill Match", result.skill_match_percentage],
+    ["Experience", result.experience_match.score], ["Education", result.education_match.score],
+  ];
+  grid.innerHTML = cards.map(([label, value]) => {
+    const display = value == null ? "—" : Math.round(value);
+    const color = value == null ? "var(--text-secondary)" : value >= 80 ? "var(--text-success)" : value >= 60 ? "var(--text-warning)" : "var(--text-danger)";
+    return `<div class="score-card"><p class="label">${label}</p><p class="value" style="color:${color}">${display}</p></div>`;
+  }).join("");
+ 
+  document.getElementById("back").onclick = () => { state.screen = "single"; state.singleResults = null; render(); };
+}
+ 
+function renderMultiUpload() {
+  const extractedCount = state.multiResumes.filter((r) => r.status === STATUS.EXTRACTED).length;
+  const canAnalyze = state.multiJD?.status === STATUS.EXTRACTED && extractedCount > 0;
+  app.innerHTML = `
+    <div class="wrap">
+      <button class="back-link" id="back">← Back to Home</button>
+      <h1 class="page-title">👥 Upload Files for Comparison</h1>
+      ${errorBannerHtml(state.error)}
+      ${pipelineStatusHtml("Job Description", state.multiJD)}
+      ${dropzoneHtml("multi-jd-input", "Job Description File (PDF, DOCX, TXT)", "📋", state.multiJD)}
+      <div>
+        <label class="dropzone-label">Resume Files (PDF, DOCX, TXT) — select multiple</label>
+        <div class="dropzone ${state.multiResumes.length ? "success" : ""}">
+          <input type="file" multiple accept=".pdf,.docx,.txt" id="multi-resumes-input" />
+          <label for="multi-resumes-input" style="cursor:pointer; display:block;">
+            <div class="icon">📄</div>
+            <p class="fname" style="color:var(--text-primary)">${state.multiResumes.length ? `${state.multiResumes.length} file(s) added — click to add more` : "Click to upload or drag and drop"}</p>
+            <p class="hint">PDF, DOCX, or TXT — multiple allowed</p>
+          </label>
+        </div>
+        <div id="resume-list">
+          ${state.multiResumes.map((r) => `
+            <div class="resume-row">
+              <span>${r.status === STATUS.EXTRACTED ? "✓" : r.status === STATUS.FAILED ? "✗" : "…"} ${r.file.name}${r.status === STATUS.FAILED ? ` <span style="color:var(--text-danger)">${r.error}</span>` : ""}</span>
+              <button data-name="${r.file.name}">Remove</button>
+            </div>`).join("")}
+        </div>
+      </div>
+      <button class="btn-primary" id="analyze" ${canAnalyze ? "" : "disabled"}>Compare Resumes (${extractedCount} ready)</button>
+    </div>`;
+  document.getElementById("back").onclick = () => { state.screen = "home"; state.multiJD = null; state.multiResumes = []; state.error = ""; render(); };
+  document.getElementById("multi-jd-input").onchange = (e) => handleFileInput(e.target, (entry) => (state.multiJD = entry));
+  document.getElementById("multi-resumes-input").onchange = async (e) => {
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+    state.error = "";
+    const placeholders = files.map((file) => ({ file, status: STATUS.EXTRACTING, text: "", error: "" }));
+    state.multiResumes = [...state.multiResumes, ...placeholders];
+    render();
+    const results = await Promise.all(files.map(async (file) => {
+      try { return { file, status: STATUS.EXTRACTED, text: await extractTextFromFile(file), error: "" }; }
+      catch (err) { return { file, status: STATUS.FAILED, text: "", error: err.message }; }
+    }));
+    results.forEach((r) => {
+      const idx = state.multiResumes.findIndex((p) => p.file === r.file);
+      if (idx !== -1) state.multiResumes[idx] = r;
+    });
+    const failed = results.filter((r) => r.status === STATUS.FAILED);
+    if (failed.length) state.error = `${failed.length} file(s) could not be read: ${failed.map((f) => f.file.name).join(", ")}`;
+    render();
+  };
+  app.querySelectorAll("#resume-list button").forEach((btn) => {
+    btn.onclick = () => { state.multiResumes = state.multiResumes.filter((r) => r.file.name !== btn.dataset.name); render(); };
+  });
+  document.getElementById("analyze").onclick = async () => {
+    if (!canAnalyze) return;
+    document.getElementById("analyze").textContent = "Comparing...";
+    document.getElementById("analyze").disabled = true;
+    await new Promise((r) => setTimeout(r, 400));
+    const ready = state.multiResumes.filter((r) => r.status === STATUS.EXTRACTED).map((r) => ({ name: r.file.name, text: r.text }));
+    state.multiResults = analyzeBatchRuleBased(state.multiJD.text, ready);
+    state.screen = "multi-results";
+    render();
+  };
+}
+ 
+function renderMultiResults() {
+  const { analysis_type, ai_unavailable_reason, results } = state.multiResults;
+  app.innerHTML = `
+    <div class="wrap wrap-wide">
+      <button class="back-link" id="back">← Back to Upload</button>
+      <div class="title-row"><h1>🏆 Candidate Rankings</h1><span class="type-badge ${analysis_type === "ai" ? "type-ai" : "type-rule"}">${analysis_type === "ai" ? "AI Analysis" : "Rule-Based Analysis"}</span></div>
+      ${errorBannerHtml(ai_unavailable_reason, "warning")}
+      <div class="section">
+        <table>
+          <thead><tr><th>Rank</th><th>Candidate</th><th>ATS Score</th><th>Overall Match</th><th>Skill Match</th></tr></thead>
+          <tbody>
+            ${results.map((c) => `<tr>
+              <td>${c.rank === 1 ? "🥇" : c.rank === 2 ? "🥈" : c.rank === 3 ? "🥉" : c.rank}</td>
+              <td style="text-align:left">${c.candidate_name}</td>
+              <td>${c.ats_score}</td><td>${c.overall_match_percentage}%</td><td>${c.skill_match_percentage}%</td>
+            </tr>`).join("")}
+          </tbody>
+        </table>
+      </div>
+      ${results[0] ? `<div class="section"><h2>🏆 Top Match</h2><div style="padding:1rem;background:var(--bg-success);border-radius:8px;"><p style="margin:0;color:var(--text-success);font-weight:500;">Best candidate: <strong>${results[0].candidate_name}</strong> with ATS score of <strong>${results[0].ats_score}</strong></p></div></div>` : ""}
+    </div>`;
+  document.getElementById("back").onclick = () => { state.screen = "multi"; state.multiResults = null; render(); };
+}
+ 
+render();
+</script>
+ 
